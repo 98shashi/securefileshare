@@ -11,7 +11,7 @@ from cryptography.fernet import Fernet
 
 
 app = Flask(__name__)
-UPLOAD_FOLDER = 'C:/uploads'
+UPLOAD_FOLDER = '/home'
 DOWNLOAD_FOLDER = 'C:/downloads'
 app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 app.config['MAX_CONTENT_LENGTH'] = 80000000
