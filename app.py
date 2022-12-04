@@ -1,8 +1,10 @@
 import json
 import os
+from asyncio import sleep
 from datetime import datetime
+
 import mysql.connector
-from flask import Flask, flash, request, redirect, url_for, session, render_template
+from flask import Flask, flash, request, redirect, url_for, session, render_template, send_from_directory
 import boto3
 from werkzeug.utils import secure_filename
 from flask_bcrypt import Bcrypt
@@ -263,12 +265,14 @@ def filedownload():
     else:
         msg='Filedownload error'
         return render_template('groups.html', msg=msg)
-    return render_template('download.html', fullpath=fullpath, username=session['username'])
+    # return render_template('download.html', fullpath=fullpath, username=session['username'])
 
 @app.route('/filedownload/<filename>', methods=['GET', 'POST'])
 def filedownload_link(filename):
-    fullpath = os.path.join(DOWNLOAD_FOLDER, filename)
-    return render_template('download.html', fullpath=fullpath, username=session['username'])
+    fullpath = os.path.join(DOWNLOAD_FOLDER)
+    sleep(5)
+    return send_from_directory(directory=fullpath, path=filename, as_attachment=True)
+    # return render_template('download.html', fullpath=fullpath, username=session['username'])
 def db_operations(filename, bucket_name, groupid,key):
     ENDPOINT = "securep.c7x8rgc7mug5.us-east-2.rds.amazonaws.com"
     PORT = "3306"
