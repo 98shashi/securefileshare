@@ -1,0 +1,35 @@
+<body>
+<div align="center">
+		<div align="center" class="border">
+			<div class="header">
+				<h3 class="word">Upload new File</h3>
+			</div>
+            <div class="container">
+<div class="row justify-content-center">
+    <div class="col-lg-6 offset-lg-3">
+        <div class="msg">{{ msg }}</div>
+    <form class="form-group" method=post enctype=multipart/form-data>
+      <input class="form-control" type="file" name="file" id="fileUpload" required></br></br>
+      <input class="btn btn-primary" type=submit value=submit file></br></br>
+    </form>
+        <h2>Files in the group </h2>
+        <ul>
+    {% for file in files %}
+    <li>{{file[0]}} - <a id={{ file[3] }} href="#" onclick=" calTotal(this)">{{ file[4] }}</a></li>
+         {% endfor %}
+</ul>
+    </div></div>
+                <div class="msg">{{ msg }}</div>
+                <a class="nav-link" href="/logout">Logout</a>
+</body>
+<script>
+    function calTotal(qty){
+        const URL = '/filedownload'
+        const xhr = new XMLHttpRequest();
+        params = JSON.stringify({ "url": qty.id })
+        xhr.open('POST', URL);
+        xhr.send(params);
+<!--    console.log(qty);-->
+<!--    window.location.href = "/filedownload/"+qty.id;-->
+    }
+</script>

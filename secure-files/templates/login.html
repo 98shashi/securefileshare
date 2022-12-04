@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Login</title>
+</head>
+<body>
+<h1>Login Page</h1>
+
+    <form class="col-lg-6 offset-lg-3 " action="{{ url_for('login') }}" method="post">
+    <div class="msg">{{ msg }}</div>
+					<div class="row justify-content-center">
+
+					<input class="form-control" id="username" name="username" type="text" placeholder="username" class="textbox"/></br></br>
+					<input class="form-control" id="password" name="password" type="password" placeholder="Password" class="textbox"/></br></br>
+
+					<button type="submit" class="btn btn-primary">login</button></br>
+					</div></form>
+  <a href="{{ url_for('register') }}">Dont have an account? Sign up</a>
+</body>
+</html>

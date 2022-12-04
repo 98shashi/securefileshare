@@ -1,0 +1,15 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title> groups</title>
+</head>
+<body>
+<h2>List Groups present </h2>
+<ul>
+    {% for group in groups %}
+    <li><a href={{ "/upload/"+group[0] | string() }}>{{ group[1] }}</a></li>
+         {% endfor %}
+</ul>
+</body>
+</html>

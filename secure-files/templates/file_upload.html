@@ -1,0 +1,21 @@
+<body>
+<div align="center">
+		<div align="center" class="border">
+			<div class="header">
+				<h3 class="word">Upload new File</h3>
+			</div>
+            <div class="container">
+<div class="row justify-content-center">
+    <div class="col-lg-6 offset-lg-3">
+        <div class="msg">{{ msg }}</div>
+    <form class="form-group" method=post enctype=multipart/form-data>
+      <input class="form-control" type="file" name="file" id="fileUpload" required></br></br>
+      <input class="btn btn-primary" type=submit value=submit file></br></br>
+    </form>
+        <h2>Files in the group </h2>
+        <ul>
+    {% for file in files %}
+    <li>{{file[0]}} - <a href={{ file[3] }}>{{ file[4] }}</a></li>
+         {% endfor %}
+</ul>
+</body>

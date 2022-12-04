@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title> groups</title>
+</head>
+<body>
+<h2>List Groups present </h2><div class="msg">{{ msg }}</div>
+<button><a href="{{url_for('create_group')}}"/>Create New</button>
+<ul>
+    {% for group in groups %}
+    <li><a href="{{ '/upload/'+group[0] | string() }}">{{ group[1] }}</a></li>
+         {% endfor %}
+</ul>
+<h3>Approve below users to the groups</h3>
+<ul>
+    {% for user in approval_users %}
+    <li>
+        {{user[0]}} - {{user[2]}} - <a href="{{ '/approve/'+user[4] | string() }}">Approve</a>
+    </li>
+         {% endfor %}
+</ul>
+
+<a class="nav-link" href="/logout">Logout</a>
+</body>
+</html>
