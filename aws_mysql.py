@@ -19,3 +19,5 @@ try:
     print(query_results)
 except Exception as e:
     print("Database connection failed due to {}".format(e))
+
+

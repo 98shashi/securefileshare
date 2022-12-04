@@ -11,8 +11,10 @@ from cryptography.fernet import Fernet
 
 
 app = Flask(__name__)
+# UPLOAD_FOLDER = 'C:/uploads'
+# DOWNLOAD_FOLDER = 'C:/downloads'
 UPLOAD_FOLDER = '/home/ubuntu/uploads'
-DOWNLOAD_FOLDER = '/home/ubuntu/downloads'
+DOWNLOAD_FOLDER = '/var/www/html/'
 app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 app.config['MAX_CONTENT_LENGTH'] = 80000000
 ALLOWED_EXTENSIONS = {'txt', 'pdf', 'png', 'jpg', 'jpeg', 'gif','mp3','mp4'}
@@ -71,8 +73,6 @@ def logout():
     session.pop('id', None)
     session.pop('username', None)
     return redirect(url_for('login'))
-
-
 
 @app.route('/register', methods=['GET', 'POST'])
 def register():
@@ -259,12 +259,16 @@ def filedownload():
         fullpath = os.path.join(DOWNLOAD_FOLDER, filename)
         with open(fullpath, 'wb') as f:
             f.write(decrypted)
-        return (True)
+        return fullpath
     else:
         msg='Filedownload error'
-        render_template('groups.html', msg=msg)
+        return render_template('groups.html', msg=msg)
+    return render_template('download.html', fullpath=fullpath, username=session['username'])
 
-
+@app.route('/filedownload/<filename>', methods=['GET', 'POST'])
+def filedownload_link(filename):
+    fullpath = os.path.join(DOWNLOAD_FOLDER, filename)
+    return render_template('download.html', fullpath=fullpath, username=session['username'])
 def db_operations(filename, bucket_name, groupid,key):
     ENDPOINT = "securep.c7x8rgc7mug5.us-east-2.rds.amazonaws.com"
     PORT = "3306"

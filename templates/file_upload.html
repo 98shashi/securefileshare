@@ -15,7 +15,7 @@
         <h2>Files in the group </h2>
         <ul>
     {% for file in files %}
-    <li>{{file[0]}} - <a id={{ file[3] }} href="#" onclick=" calTotal(this)">{{ file[4] }}</a></li>
+    <li>{{file[0]}} - <a id={{ file[3] }} href={{ "/filedownload/" + file[4] }} onclick=" calTotal(this)">{{ file[4] }}</a></li>
          {% endfor %}
 </ul>
     </div></div>
