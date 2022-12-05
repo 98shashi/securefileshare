@@ -43,6 +43,7 @@ def home():
 
 @app.route('/login', methods=['GET', 'POST'])
 def login():
+    msg = ''
     if request.method == 'POST':
         username = request.form['username']
         password1 = request.form['password']
@@ -50,24 +51,45 @@ def login():
         cursor = conn.cursor()
 
         pw_hash = bcrypt.generate_password_hash(password1)
-        cursor.execute("SELECT password FROM users WHERE username = '{}' ".format(username))
-        user_account = cursor.fetchone()
+        if re.search('(select|update|delete|drop .+)', username.lower()):
+            msg = "invalid chars found, please try again with valid input"
+            return render_template('login.html', msg=msg)
+        elif re.search('(select|update|delete|drop .+)', password1.lower()):
+            msg = "invalid chars found, please try again with valid input"
+            return render_template('login.html', msg=msg)
+        elif len(username)>16:
+            msg =  "length of username is greater than 16 chars please enter required length"
+            return render_template('login.html', msg=msg)
+        elif len(password1)>16:
+            msg = "length of password is greater than 16 chars please enter required length"
+            return render_template('login.html', msg=msg)
+        cursor = conn.cursor()
         cursor.execute("SELECT * FROM users WHERE username = '{}' ".format(username))
-        account = cursor.fetchone()
-        print(account)
-
-
-        flag = bcrypt.check_password_hash(user_account[0],password1)
-        if flag:
-            session['loggedin'] = True
-            session['id'] = account[0]
-            session['username'] = account[2]
-            # return render_template('index.html')
-            return redirect(url_for('group',user_data=username))
+        account_exist = cursor.fetchone()
+        if account_exist == None:
+            msg = 'user does not exists'
+            return render_template('login.html', msg=msg)
         else:
-            return render_template('login.html')
 
-    return render_template('login.html')
+            cursor.execute("SELECT password FROM users WHERE username = '{}' ".format(username))
+            user_account = cursor.fetchone()
+            cursor.execute("SELECT * FROM users WHERE username = '{}' ".format(username))
+            account = cursor.fetchone()
+            cursor.close()
+            print(account)
+
+
+            flag = bcrypt.check_password_hash(user_account[0],password1)
+            if flag:
+                session['loggedin'] = True
+                session['id'] = account[0]
+                session['username'] = account[2]
+            # return render_template('index.html')
+                return redirect(url_for('group',user_data=username))
+            else:
+                msg = 'wrong password'
+                return render_template('login.html', msg = msg)
+    return render_template('login.html',msg = msg)
 
 @app.route('/logout')
 def logout():
@@ -83,25 +105,66 @@ def register():
         username = request.form['username']
         password = request.form['password']
         password_has = bcrypt.generate_password_hash(password)
+
+        if re.search('(select|update|delete|drop .+)',name.lower()):
+            msg = "invalid chars found, please try again with valid input"
+            return render_template('register.html', msg=msg)
+        elif re.search('(select|update|delete|drop .+)',username.lower()):
+            msg = "invalid chars found, please try again with valid input"
+            return render_template('register.html', msg=msg)
+        elif re.search('(select|update|delete|drop .+)', password.lower()):
+            msg = "invalid chars found, please try again with valid input"
+            return render_template('register.html', msg=msg)
+        elif len(name)>81:
+            msg=  "length of name is greater than 80 chars please enter required length"
+            return render_template('register.html', msg=msg)
+        elif len(username)>16:
+            msg=  "length of username is greater than 16 chars please enter required length"
+            return render_template('register.html', msg=msg)
+        elif len(password)>16:
+            msg=  "length of password is greater than 16 chars please enter required length"
+            return render_template('register.html', msg=msg)
         cursor = conn.cursor()
-        cursor.execute(''' INSERT INTO users(name,username,password) VALUES(%s,%s,%s)''', (name,username,password_has))
-        conn.commit()
-        cursor.close()
-        return render_template('login.html')
+        cursor.execute("SELECT * FROM users WHERE username = '{}' ".format(username))
+        account_exist = cursor.fetchone()
+        if len(account_exist)>0:
+            msg= 'user already exists'
+            return render_template('login.html',msg =msg)
+        else:
+
+            cursor.execute(''' INSERT INTO users(name,username,password) VALUES(%s,%s,%s)''', (name,username,password_has))
+            conn.commit()
+            cursor.close()
+            return render_template('login.html')
     return render_template('register.html')
 
 @app.route('/create_group',methods=['GET', 'POST'])
 def create_group():
     if session['loggedin'] == True:
         if request.method == 'POST':
+            msg= ''
             group_name = request.form['groupname']
             owner_id = session['id']
-            cursor = conn.cursor()
-            print("INSERT INTO securedb.groups(groupname,ownerid) VALUES('{}',{})".format(group_name,owner_id))
-            cursor.execute("INSERT INTO securedb.groups(groupname,ownerid) VALUES('{}',{})".format(group_name,owner_id))
-            conn.commit()
-            cursor.close()
-            return redirect(url_for('group',user_data=session['username']))
+            if re.search('(select|update|delete|drop .+)', group_name.lower()):
+                msg = "invalid chars found, please try again with valid input"
+                return render_template('group_creation.html', msg=msg)
+                '''print("INSERT INTO securedb.groups(groupname,ownerid) VALUES('{}',{})".format(group_name,owner_id))'''
+            elif len(group_name)>16:
+                msg = "length of groupname is greater than 16 chars please enter required length"
+                return render_template('group_creation.html', msg=msg)
+            else:
+                cursor = conn.cursor()
+                cursor.execute("SELECT * FROM securedb.groups WHERE groupname = '{}' ".format(group_name))
+                account_exist = cursor.fetchone()
+                if len(account_exist) > 0:
+                    msg = 'group already exists'
+                    return render_template('group_creation.html', msg=msg)
+                else:
+                    cursor = conn.cursor()
+                    cursor.execute("INSERT INTO securedb.groups(groupname,ownerid) VALUES('{}',{})".format(group_name,owner_id))
+                    conn.commit()
+                    cursor.close()
+                    return redirect(url_for('group',user_data=session['username']))
         return render_template('group_creation.html')
     else :
         msg = 'Error loading page'
