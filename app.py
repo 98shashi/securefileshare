@@ -127,7 +127,7 @@ def register():
         cursor = conn.cursor()
         cursor.execute("SELECT * FROM users WHERE username = '{}' ".format(username))
         account_exist = cursor.fetchone()
-        if len(account_exist)>0:
+        if account_exist != None:
             msg= 'user already exists'
             return render_template('login.html',msg =msg)
         else:
@@ -154,9 +154,9 @@ def create_group():
                 return render_template('group_creation.html', msg=msg)
             else:
                 cursor = conn.cursor()
-                cursor.execute("SELECT * FROM securedb.groups WHERE groupname = '{}' ".format(group_name))
+                flag3 = cursor.execute("SELECT * FROM securedb.groups WHERE groupname = '{}' ".format(group_name))
                 account_exist = cursor.fetchone()
-                if len(account_exist) > 0:
+                if flag3:
                     msg = 'group already exists'
                     return render_template('group_creation.html', msg=msg)
                 else:
