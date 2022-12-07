@@ -24,7 +24,7 @@ ALLOWED_EXTENSIONS = {'txt', 'pdf', 'png', 'jpg', 'jpeg', 'gif','mp3','mp4'}
 app.secret_key = 'this is your secret key'
 
 bcrypt = Bcrypt(app)
-ENDPOINT = "securep.c7x8rgc7mug5.us-east-2.rds.amazonaws.com"
+ENDPOINT = "endpoint"
 PORT = "3306"
 USER = "admin"
 REGION = "us-east-2"
@@ -238,8 +238,8 @@ def upload(groupid):
                     filename = secure_filename(file.filename)
                     file.save(os.path.join(UPLOAD_FOLDER, filename))
                     s3 = boto3.client("s3",
-                                  aws_access_key_id="AKIAXZTDUHOENARZFNNC",
-                                  aws_secret_access_key="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")
+                                  aws_access_key_id="",
+                                  aws_secret_access_key="")
                     bucket_name = "98shashi1"
                     fullpath = os.path.join(UPLOAD_FOLDER, filename)
                     key = Fernet.generate_key()
@@ -298,7 +298,7 @@ def filedownload():
             url = json.loads(url)["url"]
         r = requests.get(url)
 
-        ENDPOINT = "securep.c7x8rgc7mug5.us-east-2.rds.amazonaws.com"
+        ENDPOINT = ""
         PORT = "3306"
         USER = "admin"
         DBNAME = ""
@@ -337,7 +337,7 @@ def filedownload_link(filename):
     return send_from_directory(directory=fullpath, path=filename, as_attachment=True)
     # return render_template('download.html', fullpath=fullpath, username=session['username'])
 def db_operations(filename, bucket_name, groupid,key):
-    ENDPOINT = "securep.c7x8rgc7mug5.us-east-2.rds.amazonaws.com"
+    ENDPOINT = "d"
     PORT = "3306"
     USER = "admin"
     REGION = "us-east-2"
