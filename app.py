@@ -26,11 +26,11 @@ app.secret_key = 'this is your secret key'
 bcrypt = Bcrypt(app)
 ENDPOINT = "endpoint"
 PORT = "3306"
-USER = "admin"
+USER = ""
 REGION = "us-east-2"
-DBNAME = "securedb"
+DBNAME = ""
 os.environ['LIBMYSQL_ENABLE_CLEARTEXT_PLUGIN'] = '1'
-token = "Shashi123"
+token = ""
 
 conn = mysql.connector.connect(host=ENDPOINT, user=USER, passwd=token, port=PORT, database=DBNAME)
 
@@ -304,7 +304,7 @@ def filedownload():
         DBNAME = ""
         os.environ['LIBMYSQL_ENABLE_CLEARTEXT_PLUGIN'] = '1'
 
-        token = "Shashi123"
+        token = ""
 
         try:
             conn = mysql.connector.connect(host=ENDPOINT, user=USER, passwd=token, port=PORT, database=DBNAME)
@@ -339,9 +339,9 @@ def filedownload_link(filename):
 def db_operations(filename, bucket_name, groupid,key):
     ENDPOINT = "d"
     PORT = "3306"
-    USER = "admin"
-    REGION = "us-east-2"
-    DBNAME = "securedb"
+    USER = ""
+    REGION = ""
+    DBNAME = ""
     os.environ['LIBMYSQL_ENABLE_CLEARTEXT_PLUGIN'] = '1'
     token = "Shashi123"
 
